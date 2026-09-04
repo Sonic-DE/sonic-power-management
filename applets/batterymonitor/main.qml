@@ -305,7 +305,7 @@ PlasmoidItem {
             text: i18n("&Show Energy Information…")
             icon.name: "documentinfo"
             visible: batterymonitor.kcmEnergyInformationAuthorized
-            onTriggered: checked => KCMUtils.KCMLauncher.openInfoCenter("kcm_energyinfo")
+            onTriggered: KCMUtils.KCMLauncher.openInfoCenter("kcm_energyinfo")
         },
         PlasmaCore.Action {
             text: i18n("Show Battery Percentage on Icon When Not Fully Charged")
@@ -313,9 +313,7 @@ PlasmoidItem {
             visible: batteryControl.hasBatteries
             checkable: true
             checked: Plasmoid.configuration.showPercentage
-            onTriggered: checked => {
-                Plasmoid.configuration.showPercentage = checked;
-            }
+            onTriggered: Plasmoid.configuration.showPercentage = checked;
         }
     ]
 
@@ -323,9 +321,7 @@ PlasmoidItem {
         id: configureAction
         text: i18n("&Configure Power Management…")
         icon.name: "configure"
-        onTriggered: checked => {
-            KCMUtils.KCMLauncher.openSystemSettings("kcm_powerdevilprofilesconfig");
-        }
+        onTriggered: KCMUtils.KCMLauncher.openSystemSettings("kcm_powerdevilprofilesconfig");
     }
 
     Component.onCompleted: {
