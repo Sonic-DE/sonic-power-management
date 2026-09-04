@@ -261,8 +261,6 @@ PlasmoidItem {
     fullRepresentation: PopupDialog {
         id: dialogItem
 
-        readonly property var pmControl: inhibitionControl
-
         Layout.minimumWidth: (batterymonitor.inPanel && !batterymonitor.compactInPanel) ? -1 : Kirigami.Units.gridUnit * 10
         Layout.maximumWidth: Kirigami.Units.gridUnit * 80
         Layout.preferredWidth: Kirigami.Units.gridUnit * 20
@@ -295,6 +293,10 @@ PlasmoidItem {
 
         onInhibitionChangeRequested: inhibit => {
             batterymonitor.inhibitionChangeRequested(inhibit);
+        }
+
+        onInhibitionAllowedRequested: (name, reason, allowed) => {
+            inhibitionControl.setInhibitionAllowed(name, reason, allowed)
         }
     }
 
