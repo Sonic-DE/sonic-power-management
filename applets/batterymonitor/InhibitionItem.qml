@@ -11,7 +11,6 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import org.kde.notification
-import org.kde.kwindowsystem as KWindowSystem
 import org.kde.plasma.components as PlasmaComponents3
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.ksvg as KSvg
@@ -157,7 +156,7 @@ PlasmaComponents3.ItemDelegate {
 
                     Layout.fillWidth: true
 
-                    iconSource: icon || (KWindowSystem.KWindowSystem.isPlatformWayland ? "wayland" : "xorg")
+                    iconSource: icon || "xorg"
                     text: {
                         const why = reason ?? i18nc("An application's reason for inhibiting sleep and/or screen locking", "Unknown reason.");
 

@@ -15,7 +15,6 @@
 
 #include "backlightbrightness.h"
 #include "ddcutildetector.h"
-#include "externalbrightnesscontrol.h"
 #include "kwinbrightness.h"
 
 #include <brightnessosdwidget.h>
@@ -53,10 +52,7 @@ ScreenBrightnessController::ScreenBrightnessController()
               .displayIdPrefix = "ddc:",
           },
       })
-    , m_externalBrightnessController(std::make_unique<ExternalBrightnessController>())
 {
-    connect(m_externalBrightnessController.get(), &ExternalBrightnessController::activeChanged, this, &ScreenBrightnessController::onDetectorDisplaysChanged);
-
     const auto op = new KScreen::GetConfigOperation(KScreen::GetConfigOperation::NoOptions, this);
     connect(op, &KScreen::GetConfigOperation::finished, this, [this](KScreen::ConfigOperation *configOp) {
         if (configOp->hasError()) {
@@ -132,7 +128,6 @@ void ScreenBrightnessController::onDetectorDisplaysChanged()
     QStringList legacyDisplayIds;
 
     std::unordered_map<QString, DisplayInfo> newDisplayById;
-    QList<DisplayBrightness *> newForExternalControl;
 
     // for backwards compatibility with legacy API clients, set the same brightness to all displays
     // of the first detector - e.g. to only the backlight display, or to all external DDC monitors
@@ -140,10 +135,9 @@ void ScreenBrightnessController::onDetectorDisplaysChanged()
 
     // add new displays
     for (const DetectorInfo &detectorInfo : m_detectors) {
-        const bool shouldUseExternalControl = m_externalBrightnessController->isActive() && !dynamic_cast<KWinDisplayDetector *>(detectorInfo.detector);
         QList<DisplayBrightness *> detectorDisplays = detectorInfo.detector->displays();
 
-        if (!detectorDisplays.isEmpty() && !shouldUseExternalControl) {
+        if (!detectorDisplays.isEmpty()) {
             if (firstSupportedDetector == nullptr) {
                 firstSupportedDetector = detectorInfo.detector;
             }
@@ -151,26 +145,22 @@ void ScreenBrightnessController::onDetectorDisplaysChanged()
         }
         for (DisplayBrightness *display : std::as_const(detectorDisplays)) {
             const QString displayId = QString::fromLocal8Bit(detectorInfo.displayIdPrefix) + display->id();
-            if (shouldUseExternalControl) {
-                newForExternalControl.push_back(display);
-            } else {
-                auto &info = newDisplayById[displayId];
-                info = DisplayInfo{
-                    .display = display,
-                    .detector = detectorInfo.detector,
-                    .match =
-                        DisplayMatch{
-                            .maxBrightness = display->maxBrightness(),
-                            .isInternal = display->isInternal(),
-                            .edidData = display->edidData(),
-                        },
-                };
-                info.brightnessLogic.setValueRange(display->knownSafeMinBrightness(), display->maxBrightness());
-                info.brightnessLogic.setValue(display->brightness());
-                m_sortedDisplayIds.push_back(displayId);
-                if (detectorInfo.detector == firstSupportedDetector) {
-                    legacyDisplayIds.append(displayId);
-                }
+            auto &info = newDisplayById[displayId];
+            info = DisplayInfo{
+                .display = display,
+                .detector = detectorInfo.detector,
+                .match =
+                    DisplayMatch{
+                        .maxBrightness = display->maxBrightness(),
+                        .isInternal = display->isInternal(),
+                        .edidData = display->edidData(),
+                    },
+            };
+            info.brightnessLogic.setValueRange(display->knownSafeMinBrightness(), display->maxBrightness());
+            info.brightnessLogic.setValue(display->brightness());
+            m_sortedDisplayIds.push_back(displayId);
+            if (detectorInfo.detector == firstSupportedDetector) {
+                legacyDisplayIds.append(displayId);
             }
         }
     }
@@ -244,7 +234,6 @@ void ScreenBrightnessController::onDetectorDisplaysChanged()
 
     m_displaysById = std::move(newDisplayById);
     m_rememberedDisplayState = std::move(newRememberedDisplayState);
-    m_externalBrightnessController->setDisplays(newForExternalControl);
 
     for (const QString &removed : removedDisplayIds) {
         Q_EMIT displayRemoved(removed);

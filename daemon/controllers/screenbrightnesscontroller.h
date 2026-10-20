@@ -26,8 +26,6 @@
 #include "displaymatch.h"
 #include "powerdevilscreenbrightnesslogic.h"
 
-class ExternalBrightnessController;
-
 class POWERDEVILCORE_EXPORT ScreenBrightnessController : public QObject
 {
     Q_OBJECT
@@ -221,7 +219,6 @@ private:
     };
     QList<DetectorInfo> m_detectors;
     int m_finishedDetectingCount = 0;
-    std::unique_ptr<ExternalBrightnessController> m_externalBrightnessController;
 
     struct RememberedDisplayState {
         int brightness;

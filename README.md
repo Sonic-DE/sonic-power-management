@@ -19,7 +19,7 @@ Directly interacting with this service, but not located in this repository:
 * The [Power Management applet](https://invent.kde.org/plasma/plasma-workspace/-/tree/master/applets/batterymonitor) in plasma-workspace.
 * The [Brightness & Color applet](https://invent.kde.org/plasma/plasma-workspace/-/tree/master/applets/brightness), also part of plasma-workspace.
 * Even [KRunner commands for PowerDevil actions](https://invent.kde.org/plasma/plasma-workspace/-/tree/master/runners/powerdevil) are part of plasma-workspace for some reason.
-* In a Wayland session, [KWin](https://invent.kde.org/plasma/kwin) takes over certain functionality related to user activity tracking and turning displays on/off which in X11 is managed by PowerDevil directly.
+* In SonicDE's X11 session, PowerDevil manages user activity tracking and display power control directly, with the compositor providing the screen fade effect.
 * Plasma Mobile has [its own UI for power management settings](https://invent.kde.org/plasma/plasma-mobile/-/tree/master/kcms/powermanagement).
 
 PowerDevil does not handle hardware interactions such as display configuration, turning wireless interfaces off/on ("airplane mode"), mounting/unmounting disks, or sound/audio configuration. Other Plasma components are responsible for these features.

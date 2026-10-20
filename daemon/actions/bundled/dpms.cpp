@@ -17,9 +17,7 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
-#include <QGuiApplication>
 #include <QTimer>
-#include <private/qtx11extras_p.h>
 
 #include <KActionCollection>
 #include <KGlobalAccel>
@@ -48,16 +46,10 @@ DPMS::DPMS(QObject *parent)
 {
     setRequiredPolicies(PowerDevil::PolicyAgent::ChangeScreenSettings);
 
-    // On Wayland, KWin takes care of performing the effect properly
-    if (QX11Info::isPlatformX11()) {
-        auto fadeEffect = new PowerDevil::KWinKScreenHelperEffect(this);
-        connect(this, &DPMS::startFade, fadeEffect, &PowerDevil::KWinKScreenHelperEffect::start);
-        connect(this, &DPMS::stopFade, fadeEffect, &PowerDevil::KWinKScreenHelperEffect::stop);
-        connect(fadeEffect, &PowerDevil::KWinKScreenHelperEffect::fadedOut, this, &DPMS::turnOffOnIdleTimeout);
-    } else {
-        // short-cut without fadeEffect in between timeout and actual action (compositor handles fading)
-        connect(this, &DPMS::startFade, this, &DPMS::turnOffOnIdleTimeout);
-    }
+    auto fadeEffect = new PowerDevil::KWinKScreenHelperEffect(this);
+    connect(this, &DPMS::startFade, fadeEffect, &PowerDevil::KWinKScreenHelperEffect::start);
+    connect(this, &DPMS::stopFade, fadeEffect, &PowerDevil::KWinKScreenHelperEffect::stop);
+    connect(fadeEffect, &PowerDevil::KWinKScreenHelperEffect::fadedOut, this, &DPMS::turnOffOnIdleTimeout);
 
     // Listen to the policy agent
     auto policyAgent = PowerDevil::PolicyAgent::instance();

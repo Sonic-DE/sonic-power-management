@@ -34,7 +34,6 @@ set(powerdevilcore_SRCS
     controllers/udevqtclient.cpp controllers/udevqtclient.h
     controllers/udevqtdevice.cpp controllers/udevqtdevice.h
     controllers/kwinbrightness.cpp controllers/kwinbrightness.h
-    controllers/externalbrightnesscontrol.cpp controllers/externalbrightnesscontrol.h
     controllers/displaymatch.h
 )
 
@@ -79,10 +78,6 @@ qt_add_dbus_adaptor(powerdevilcore_SRCS dbus/org.kde.ScreenBrightness.Display.xm
 add_library(powerdevilcore SHARED ${powerdevilcore_SRCS})
 set_target_properties(powerdevilcore PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION 2)
 
-qt6_generate_wayland_protocol_client_sources(powerdevilcore
-    FILES ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-external-brightness-v1.xml
-)
-
 generate_export_header(powerdevilcore)
 
 # not exported, so just make the deps public
@@ -107,7 +102,6 @@ target_link_libraries(powerdevilcore
     XCB::DPMS
     powerdevil_log_static
     ${UDEV_LIBS}
-    Qt::WaylandClient
 )
 
 if (XCB_FOUND) # kwin kscreen helper effect
