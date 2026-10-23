@@ -16,6 +16,7 @@
 #include "backlightbrightness.h"
 #include "ddcutildetector.h"
 #include "kwinbrightness.h"
+#include "softwarebrightness.h"
 
 #include <brightnessosdwidget.h>
 #include <powerdevil_debug.h>
@@ -50,6 +51,11 @@ ScreenBrightnessController::ScreenBrightnessController()
               .detector = new DDCutilDetector(this),
               .debugName = "libddcutil",
               .displayIdPrefix = "ddc:",
+          },
+          {
+              .detector = new SoftwareBrightnessDetector(this),
+              .debugName = "X11 software dimming",
+              .displayIdPrefix = "software:",
           },
       })
 {
@@ -132,6 +138,7 @@ void ScreenBrightnessController::onDetectorDisplaysChanged()
     // for backwards compatibility with legacy API clients, set the same brightness to all displays
     // of the first detector - e.g. to only the backlight display, or to all external DDC monitors
     DisplayBrightnessDetector *firstSupportedDetector = nullptr;
+    QList<DisplayBrightness *> hardwareDisplays;
 
     // add new displays
     for (const DetectorInfo &detectorInfo : m_detectors) {
@@ -144,6 +151,18 @@ void ScreenBrightnessController::onDetectorDisplaysChanged()
             qCDebug(POWERDEVIL) << "Using" << detectorInfo.debugName << "for brightness controls.";
         }
         for (DisplayBrightness *display : std::as_const(detectorDisplays)) {
+            if (auto software = qobject_cast<SoftwareBrightness *>(display)) {
+                if (!needsSoftwareBrightness(software, hardwareDisplays)) {
+                    disconnect(software, nullptr, this, nullptr);
+                    // Hardware appeared (e.g. DDC detection completed late).
+                    // Remove residual gamma dimming before switching controls.
+                    software->setBrightness(software->maxBrightness());
+                    software->setDimmingMultiplier(1.0);
+                    continue;
+                }
+            } else {
+                hardwareDisplays.append(display);
+            }
             const QString displayId = QString::fromLocal8Bit(detectorInfo.displayIdPrefix) + display->id();
             auto &info = newDisplayById[displayId];
             info = DisplayInfo{

@@ -34,6 +34,7 @@ set(powerdevilcore_SRCS
     controllers/udevqtclient.cpp controllers/udevqtclient.h
     controllers/udevqtdevice.cpp controllers/udevqtdevice.h
     controllers/kwinbrightness.cpp controllers/kwinbrightness.h
+    controllers/softwarebrightness.cpp controllers/softwarebrightness.h
     controllers/displaymatch.h
 )
 
