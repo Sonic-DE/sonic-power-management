@@ -156,9 +156,9 @@ void PowerProfile::setProfile(const QString &profile, ProfileIndicatorVisibility
             }
         }
         if (indicatorVisibility == ProfileIndicatorVisibility::ShowIndicator && !watcher->isError()) {
-            QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                                 QStringLiteral("/org/kde/osdService"),
-                                                                 QStringLiteral("org.kde.osdService"),
+            QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.sonicde.sonicshell"),
+                                                                 QStringLiteral("/org/sonicde/osdService"),
+                                                                 QStringLiteral("org.sonicde.osdService"),
                                                                  QLatin1String("powerProfileChanged"));
             osdMsg << profile;
             QDBusConnection::sessionBus().asyncCall(osdMsg);

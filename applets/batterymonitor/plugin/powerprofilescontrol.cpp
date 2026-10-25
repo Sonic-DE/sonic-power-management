@@ -370,9 +370,9 @@ void PowerProfilesControl::showPowerProfileOsd(const QString &profile)
     if (isSilent()) {
         return;
     }
-    QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                         QStringLiteral("/org/kde/osdService"),
-                                                         QStringLiteral("org.kde.osdService"),
+    QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.sonicde.sonicshell"),
+                                                         QStringLiteral("/org/sonicde/osdService"),
+                                                         QStringLiteral("org.sonicde.osdService"),
                                                          QStringLiteral("powerProfileChanged"));
     osdMsg << profile;
     QDBusConnection::sessionBus().asyncCall(osdMsg);

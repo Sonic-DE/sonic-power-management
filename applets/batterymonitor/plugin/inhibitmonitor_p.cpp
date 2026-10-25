@@ -71,9 +71,9 @@ void InhibitMonitor::beginSuppressingSleep(const QString &reason, bool isSilent)
             m_sleepInhibitionCookie = reply.value();
             if (!isSilent) {
                 qDebug() << "Begin Suppressing sleep signal is used";
-                QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                                     QStringLiteral("/org/kde/osdService"),
-                                                                     QStringLiteral("org.kde.osdService"),
+                QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.sonicde.sonicshell"),
+                                                                     QStringLiteral("/org/sonicde/osdService"),
+                                                                     QStringLiteral("org.sonicde.osdService"),
                                                                      QStringLiteral("powerManagementInhibitedChanged"));
                 osdMsg << true;
                 QDBusConnection::sessionBus().asyncCall(osdMsg);
@@ -108,9 +108,9 @@ void InhibitMonitor::stopSuppressingSleep(bool isSilent)
             m_sleepInhibitionCookie.reset();
             if (!isSilent) {
                 qDebug() << "Stop Suppressing sleep signal is used";
-                QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                                     QStringLiteral("/org/kde/osdService"),
-                                                                     QStringLiteral("org.kde.osdService"),
+                QDBusMessage osdMsg = QDBusMessage::createMethodCall(QStringLiteral("org.sonicde.sonicshell"),
+                                                                     QStringLiteral("/org/sonicde/osdService"),
+                                                                     QStringLiteral("org.sonicde.osdService"),
                                                                      QStringLiteral("powerManagementInhibitedChanged"));
                 osdMsg << false;
                 QDBusConnection::sessionBus().asyncCall(osdMsg);

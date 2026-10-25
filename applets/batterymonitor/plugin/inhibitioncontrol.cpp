@@ -324,7 +324,8 @@ QList<RequestedInhibition> InhibitionControl::updatedInhibitions(const QList<Pol
     QList<RequestedInhibition> result;
 
     for (const PolicyAgentInhibition &inhibition : inhibitions) {
-        if (inhibition.who == "plasmashell"_L1 || inhibition.who == "org.kde.plasmashell"_L1) {
+        if (inhibition.who == "sonicshell"_L1 || inhibition.who == "org.sonicde.sonicshell"_L1 || inhibition.who == "plasmashell"_L1
+            || inhibition.who == "org.kde.plasmashell"_L1) {
             continue;
         }
         if (inhibition.mode != "block"_L1) {
