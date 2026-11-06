@@ -27,11 +27,6 @@ Dependencies:
       'plasma/libkscreen': '@same'
       'plasma/plasma-activities': '@same'
 
-RuntimeDependencies:
-  - 'on': ['Linux']
-    'require':
-      'sdk/selenium-webdriver-at-spi': '@same'
-
 Options:
   require-passing-tests-on: ['Linux/Qt6', 'FreeBSD']
   run-qmllint: true
