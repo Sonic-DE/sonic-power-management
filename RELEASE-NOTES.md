@@ -2,10 +2,10 @@
 
 SonicDE's power service, handling screen brightness, battery, sleep and power-saving settings.
 
-## Unreleased
+## 6.8.2 (2026-11-10)
 
-- Screen brightness can now be adjusted on displays without hardware brightness control, using software dimming, while hardware control is still preferred where available. Brightness also recovers properly when you plug in a monitor or the power service restarts.
 - Now presents itself with SonicDE names and identity throughout the desktop.
+- Behind the scenes: dropped a test dependency that's no longer needed.
 
 ## 6.8.0.1 (2026-10-23)
 
