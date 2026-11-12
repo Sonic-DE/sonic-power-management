@@ -2,6 +2,10 @@
 
 SonicDE's power service, handling screen brightness, battery, sleep and power-saving settings.
 
+## Unreleased
+
+- The dark mode switch in the brightness widget now switches between Silver Light and Silver Dark by default, instead of Breeze.
+
 ## 6.8.2 (2026-11-10)
 
 - Now presents itself with SonicDE names and identity throughout the desktop.
